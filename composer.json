@@ -1,0 +1,23 @@
+{
+  "name": "Boyd's Website",
+  "description": "No framework based website in PHP.",
+  "keywords": [],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Boyd Ying Ching",
+      "email": "chingboyd@gmail.com",
+      "role": "Creator / Main Developer"
+    }
+  ],
+  "require": {
+    "php": ">=7.0.0",
+    "filp/whoops": "~2.1"
+   },
+   "autoload": {
+    "psr-4": {
+      "MyProject\\": "src/"
+    }
+  }
+}
+
