@@ -2,6 +2,9 @@
 
 namespace MyProject;
 
+use Http\HttpRequest;
+use Http\HttpResponse;
+
 require __DIR__ . '/../vendor/autoload.php';
 
 error_reporting(E_ALL);
@@ -22,6 +25,15 @@ else {
 }
 $whoops->register();
 
-throw new \Exception;
+$request = new \Http\HttpRequest($_GET, $_POST, $_COOKIE, $_FILES, $_SERVER);
+$response = new \Http\HttpResponse;
 
-echo 'Hello Wold';
+$content = '<h1>Hello World</h1>';
+$response->setContent($content);
+
+foreach($response->getHeaders() as $header) {
+  /* Second parameter is false, otherwise existing headers will be overwritten */
+  header($header, false);
+}
+
+echo $response->getContent();
