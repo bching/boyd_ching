@@ -41,7 +41,9 @@ $routeDefinitionCallback = function(\FastRoute\RouteCollector $r) {
   }
 };
 
-$dispatcher = \FastRoute\simpleDispatcher($routeDefinitionCallback) {
+$dispatcher = \FastRoute\simpleDispatcher($routeDefinitionCallback); 
+/*
+{
   $r->addRoute('GET', '/hello-world', function() {
     echo 'Hello World';
   });
@@ -49,6 +51,7 @@ $dispatcher = \FastRoute\simpleDispatcher($routeDefinitionCallback) {
     echo 'This too';
   });
 });
+ */
 
 $routeInfo = $dispatcher->dispatch($request->getMethod(), $request->getPath());
 switch($routeInfo[0]) {
@@ -61,11 +64,13 @@ switch($routeInfo[0]) {
     $response->setStatusCode(405);
     break;
   case \FastRoute\Dispatcher::FOUND:
-    $handler = routeInfo[1];
-    $vars = routeInfo[2];
-    call_user_func($handler, $vars);
+    $className = $routeInfo[1][0];
+    $method = $routeInfo[1][1];
+    $vars = $routeInfo[2];
+
+    $class = new $className;
+    $class->$method($vars);
     break;
-}
 }
 
 $content = '<h1>Hello World</h1>';
