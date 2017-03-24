@@ -3,15 +3,20 @@
 namespace MyProject\Controllers;
 
 use Http\Response;
+use Http\Request;
 
 class Homepage {
   private $response;
+  private $request;
 
-  public function __construct(Response $response) {
+  public function __construct(Request $request, Response $response) {
+    $this->request = $request;
     $this->response = $response;
   }
 
   public function show() {
-    echo 'Hello World';
+    $content = '<h1>Hello World</h1>';
+    $content .= 'Hello ' . $this->request->getParameter('name', 'stranger');
+    $this->response->setContent($content);
   }
 }

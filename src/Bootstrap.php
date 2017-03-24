@@ -28,11 +28,17 @@ $whoops->register();
 /*
  * Set HttpRequest and HttpResponse
  */
-$request = new \Http\HttpRequest($_GET, $_POST, $_COOKIE, $_FILES, $_SERVER);
-$response = new \Http\HttpResponse;
+$injector = include('Dependencies.php');
+
+//$request = new \Http\HttpRequest($_GET, $_POST, $_COOKIE, $_FILES, $_SERVER);
+//$response = new \Http\HttpResponse;
+
+$request = $injector->make('Http\HttpRequest');
+$response = $injector->make('Http\HttpResponse');
 
 /*
  * Import routes to the application
+ * $r->addRoute($method, $routePattern, $handler);
  */
 $routeDefinitionCallback = function(\FastRoute\RouteCollector $r) {
   $routes = include('Routes.php');
@@ -53,6 +59,9 @@ $dispatcher = \FastRoute\simpleDispatcher($routeDefinitionCallback);
 });
  */
 
+/*
+ * $routeInfo[0]: NOT_FOUND || METHOD_NOT_ALLOWED || FOUND
+ */
 $routeInfo = $dispatcher->dispatch($request->getMethod(), $request->getPath());
 switch($routeInfo[0]) {
   case \FastRoute\Dispatcher::NOT_FOUND:
@@ -68,13 +77,14 @@ switch($routeInfo[0]) {
     $method = $routeInfo[1][1];
     $vars = $routeInfo[2];
 
-    $class = new $className;
+    //$class = new $className($response);
+    $class = $injector->make($className);
     $class->$method($vars);
     break;
 }
 
-$content = '<h1>Hello World</h1>';
-$response->setContent($content);
+//$content = '<h1>Hello World</h1>';
+//$response->setContent($content);
 
 foreach($response->getHeaders() as $header) {
   /* Second parameter is false, otherwise existing headers will be overwritten */
