@@ -30,9 +30,6 @@ $whoops->register();
  */
 $injector = include('Dependencies.php');
 
-//$request = new \Http\HttpRequest($_GET, $_POST, $_COOKIE, $_FILES, $_SERVER);
-//$response = new \Http\HttpResponse;
-
 $request = $injector->make('Http\HttpRequest');
 $response = $injector->make('Http\HttpResponse');
 
@@ -48,16 +45,6 @@ $routeDefinitionCallback = function(\FastRoute\RouteCollector $r) {
 };
 
 $dispatcher = \FastRoute\simpleDispatcher($routeDefinitionCallback); 
-/*
-{
-  $r->addRoute('GET', '/hello-world', function() {
-    echo 'Hello World';
-  });
-  $r->addRoute('GET', '/another-route', function() {
-    echo 'This too';
-  });
-});
- */
 
 /*
  * $routeInfo[0]: NOT_FOUND || METHOD_NOT_ALLOWED || FOUND
@@ -82,9 +69,6 @@ switch($routeInfo[0]) {
     $class->$method($vars);
     break;
 }
-
-//$content = '<h1>Hello World</h1>';
-//$response->setContent($content);
 
 foreach($response->getHeaders() as $header) {
   /* Second parameter is false, otherwise existing headers will be overwritten */
