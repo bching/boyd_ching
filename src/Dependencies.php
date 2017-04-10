@@ -30,20 +30,29 @@ $injector->alias('MyProject\Template\Renderer', 'MyProject\Template\MustacheRend
  * Rename .mustache extension to .html for compatibility with other template engines
  * Load Mustache from templates folder in root directory
  */
-$injector->define('Mustache_Engine', [
-  ':options' => [
-    'loader' => new Mustache_Loader_FilesystemLoader(dirname(__DIR__) . '/templates', [
-    'extension' => '.html',
-    ]),
-  ],
-]);
+//$injector->define('Mustache_Engine', [
+//  ':options' => [
+//    'loader' => new Mustache_Loader_FilesystemLoader(dirname(__DIR__) . '/templates', [
+//    'extension' => '.html',
+//    ]),
+//  ],
+//]);
+
+/*
+ * __DIR__ points to .../boyd_ching/public
+ */
+$injector->delegate('Twig_Environment', function () use ($injector) {
+  $loader = new Twig_Loader_Filesystem(dirname(__DIR__) . '/templates');
+  $twig = new Twig_Environment($loader);
+  return $twig;
+});
 
 /*
  * Set path of pageFolder directory
  */
 $injector->define('MyProject\Page\FilePageReader', [
   ':pageFolder' => __DIR__ . '/../pages',
-  ]);
+]);
 $injector->alias('MyProject\Page\PageReader', 'MyProject\Page\FilePageReader');
 $injector->share('MyProject\Page\FilePageReader');
 
