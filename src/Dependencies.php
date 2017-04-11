@@ -25,7 +25,7 @@ $injector->define('Http\HttpRequest', [
 $injector->alias('Http\Response', 'Http\HttpResponse');
 $injector->share('Http\HttpResponse');
 
-$injector->alias('MyProject\Template\Renderer', 'MyProject\Template\MustacheRenderer');
+$injector->alias('MyProject\Template\Renderer', 'MyProject\Template\TwigRenderer');
 /*
  * Rename .mustache extension to .html for compatibility with other template engines
  * Load Mustache from templates folder in root directory
@@ -50,10 +50,18 @@ $injector->delegate('Twig_Environment', function () use ($injector) {
 /*
  * Set path of pageFolder directory
  */
+//$injector->define('MyProject\Page\FilePageReader', [
+//  ':pageFolder' => __DIR__ . '/../pages',
+//]);
 $injector->define('MyProject\Page\FilePageReader', [
   ':pageFolder' => __DIR__ . '/../pages',
 ]);
 $injector->alias('MyProject\Page\PageReader', 'MyProject\Page\FilePageReader');
 $injector->share('MyProject\Page\FilePageReader');
+
+$injector->alias('MyProject\Template\FrontendRenderer', 'MyProject\Template\FrontendTwigRenderer');
+
+$injector->alias('MyProject\Menu\MenuReader', 'MyProject\Menu\ArrayMenuReader');
+$injector->share('MyProject\Menu\ArrayMenuReader');
 
 return $injector;
